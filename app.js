@@ -14,7 +14,7 @@ const mongoose = require("mongoose")
 mongoose.set("strictQuery", false)
 const mongoDB = process.env.DB_STRING
 
-const initial = async () => await mongoose.connect(mongoDB)
+const initial = async () => await mongoose.connect(mongoDB, { useUnifiedTopology: true, useNewUrlParser: true })
 
 initial().catch((err) => console.log(err))
 

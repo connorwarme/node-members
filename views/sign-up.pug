@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  form(method='POST' action='')
+    div.form-group 
+      label(for="first-name") First Name 
+      input(type="text" name="first-name" placeholder="John" aria-live="polite" required="true")
+    div.form-group 
+      label(for="family-name") Family Name 
+      input(type="text" name="family-name" placeholder="Will" aria-live="polite" required="true")  
+    div.form-group 
+      label(for="email") Email 
+      input(type="email" name="email" placeholder="johnwill@example.com" aria-live="polite" required="true")
+    div.form-group 
+      label(for="password") Password 
+      input(type="password" name="password" placeholder="" aria-live="polite" required="true")
+    div.form-group 
+      label(for="confirm-password") Confirm Password 
+      input(type="password" name="confirm-password" placeholder="" aria-live="polite" required="true")
+    button.submit-btn Sign Up 
