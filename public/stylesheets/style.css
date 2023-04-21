@@ -1,8 +1,25 @@
+* {
+  padding: 0;
+  margin: 0;
+}
 body {
-  padding: 50px;
+  padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+form {
+
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: fit-content;
+}
+.submit-btn {
+  padding: 10px 15px;
+  margin: 0 0 0 70px;
 }
