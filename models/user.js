@@ -18,6 +18,14 @@ const UserSchema = new Schema({
   member_status: {
     type: Boolean,
     default: false,
+  },
+  hash: {
+    type: String,
+    required: true,
+  },
+  salt: {
+    type: String,
+    required: true,
   }
 })
 

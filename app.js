@@ -14,9 +14,8 @@ const mongoose = require("mongoose")
 mongoose.set("strictQuery", false)
 const mongoDB = process.env.DB_STRING
 
-async function initial() {
-  await mongoose.connect(mongoDB)
-}
+const initial = async () => await mongoose.connect(mongoDB)
+
 initial().catch((err) => console.log(err))
 
 // view engine setup
