@@ -1,29 +1,21 @@
 {
-  "name": "members",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "node-members",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www",
+    "serverstart": "DEBUG=node-members:* npm run devstart"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/connorwarme/node-members.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/connorwarme/node-members/issues"
-  },
-  "homepage": "https://github.com/connorwarme/node-members#readme",
   "dependencies": {
-    "connect-mongoose": "^0.0.2",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "mongoose": "^7.0.4",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
