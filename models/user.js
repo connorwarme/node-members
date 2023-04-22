@@ -19,6 +19,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  admin_status: {
+    type: Boolean,
+    default: false,
+  },
   hash: {
     type: String,
     required: true,
