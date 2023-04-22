@@ -1,6 +1,31 @@
 const User = require("../models/user")
 const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator");
+const passport = require("passport")
+const LocalStrategy = require("passport-local").Strategy; 
+
+// passport setup
+// do I need an error / catch ? 
+passport.use(
+  new LocalStrategy(asyncHandler(async(username, password, done) => {
+    const user = await User.findOne({ email: username })
+    if (!user) {
+      return done(null, false, {message: "Incorrect email"})
+    }
+    if (user.password !== password) {
+      return done(null, false, { message: "Incorrect password"})
+    }
+    return done(null, user)
+  }))
+)
+passport.serializeUser(function(user, done) {
+  done(null, user.id)
+})
+// does this need an error/catch?
+passport.deserializeUser(asyncHandler(async(id, done) => {
+  const user = await User.findById(id)
+  done(null, user)
+}))
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -61,3 +86,12 @@ exports.user_create_post = [
     }
   })
 ]
+exports.user_login_get = asyncHandler(async(req, res, next) => {
+  res.render("/login", { title: "Login" })
+})
+exports.user_login_post = () => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  })
+}

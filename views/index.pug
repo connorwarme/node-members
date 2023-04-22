@@ -2,4 +2,15 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+
+  if user 
+    p Welcome back #{user.fullname}
+  
+  else 
+    a(href='/login') Login
+
+  hr 
+
+  if user   
+    div.footer-logout
+      a(href='/logout') Log Out
