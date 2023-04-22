@@ -26,6 +26,10 @@ passport.deserializeUser(asyncHandler(async(id, done) => {
   const user = await User.findById(id)
   done(null, user)
 }))
+// haven't dealt with bcrypt yet
+// haven't tested passport authentication
+// haven't added validation and sanitization for password and confirmation
+
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
