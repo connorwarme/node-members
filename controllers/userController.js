@@ -7,29 +7,29 @@ const bcrypt = require("bcryptjs")
 
 // passport setup
 // do I need an error / catch ? 
-passport.use(
-  new LocalStrategy(asyncHandler(async(username, password, done) => {
-    const user = await User.findOne({ email: username })
-    if (!user) {
-      return done(null, false, {message: "Incorrect email"})
-    }
-    bcrypt.compare(password, user.hash, (err, res) => {
-      if (res) {
-        return done(null, user)
-      } else {
-        return done(null, false, { message: "Incorrect password"})
-      }
-    })
-  }))
-)
-passport.serializeUser(function(user, done) {
-  done(null, user.id)
-})
-// does this need an error/catch?
-passport.deserializeUser(asyncHandler(async(id, done) => {
-  const user = await User.findById(id)
-  done(null, user)
-}))
+// passport.use(
+//   new LocalStrategy(asyncHandler(async(username, password, done) => {
+//     const user = await User.findOne({ email: username })
+//     if (!user) {
+//       return done(null, false, {message: "Incorrect email"})
+//     }
+//     bcrypt.compare(password, user.hash, (err, res) => {
+//       if (res) {
+//         return done(null, user)
+//       } else {
+//         return done(null, false, { message: "Incorrect password"})
+//       }
+//     })
+//   }))
+// )
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id)
+// })
+// // does this need an error/catch?
+// passport.deserializeUser(asyncHandler(async(id, done) => {
+//   const user = await User.findById(id)
+//   done(null, user)
+// }))
 // haven't dealt with bcrypt yet
 // haven't tested passport authentication
 // haven't added validation and sanitization for password and confirmation
@@ -108,9 +108,9 @@ exports.user_create_post = [
 exports.user_login_get = asyncHandler(async(req, res, next) => {
   res.render("login", { title: "Login" })
 })
-exports.user_login_post = () => {
+exports.user_login_post = asyncHandler(async(req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/",
   })
-}
+})

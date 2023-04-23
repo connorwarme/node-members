@@ -7,6 +7,9 @@ const logger = require('morgan');
 const session = require("express-session")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const User = require("./models/user")
+const asyncHandler = require("express-async-handler")
+const bcrypt = require("bcryptjs")
 
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
@@ -31,12 +34,46 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: "climb", resave: false, saveUninitialized: true }))
+
+// passport setup
+// do I need an error / catch ? 
+passport.use(
+  new LocalStrategy(asyncHandler(async(username, password, done) => {
+    const user = await User.findOne({ email: username })
+    if (!user) {
+      return done(null, false, {message: "Incorrect email"})
+    }
+    bcrypt.compare(password, user.hash, (err, res) => {
+      if (res) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: "Incorrect password"})
+      }
+    })
+  }))
+)
+passport.serializeUser(function(user, done) {
+  done(null, user.id)
+})
+// does this need an error/catch?
+passport.deserializeUser(asyncHandler(async(id, done) => {
+  const user = await User.findById(id)
+  done(null, user)
+}))
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 
+app.post(
+  "/user/login", 
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  })
+)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
