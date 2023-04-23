@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator");
 const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy; 
+const bcrypt = require("bcryptjs")
 
 // passport setup
 // do I need an error / catch ? 
@@ -12,10 +13,13 @@ passport.use(
     if (!user) {
       return done(null, false, {message: "Incorrect email"})
     }
-    if (user.password !== password) {
-      return done(null, false, { message: "Incorrect password"})
-    }
-    return done(null, user)
+    bcrypt.compare(password, user.hash, (err, res) => {
+      if (res) {
+        return done(null, user)
+      } else {
+        return done(null, false, { message: "Incorrect password"})
+      }
+    })
   }))
 )
 passport.serializeUser(function(user, done) {
@@ -56,38 +60,49 @@ exports.user_create_post = [
     .isEmail()
     .withMessage("Must be a valid email address!")
     .escape(),
+  body("password", "Password required")
+    .trim()
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters")
+    .escape(),
   
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
-    const user = new User({
-      first_name: req.body.first_name,
-      family_name: req.body.family_name,
-      email: req.body.email,
-    })
-
-    if (!errors.isEmpty()) {
-      res.render("sign-up", {
-        title: "Sign Up",
-        user,
-        errors: errors.array(),
+    const salt = 12
+    bcrypt.hash(req.body.password, salt, async(err, hashedPassword) => {
+      if (err) {
+        return next(err)
+      }
+      const user = new User({
+        first_name: req.body.first_name,
+        family_name: req.body.family_name,
+        email: req.body.email,
+        hash: hashedPassword,
       })
-      return;
-    } else {
-      // check if email is already in use
-      const emailExists = await User.findOne({ email: req.body.email }).exec()
-      if (emailExists) {
-        const error = new Error("Email address already associated with an account!")
-        error.status = 404
+      if (!errors.isEmpty()) {
         res.render("sign-up", {
           title: "Sign Up",
           user,
-          errors: error,
+          errors: errors.array(),
         })
+        return;
       } else {
-      await user.save()
-      res.redirect(user.url)
+        // check if email is already in use
+        const emailExists = await User.findOne({ email: req.body.email }).exec()
+        if (emailExists) {
+          const error = new Error("Email address already associated with an account!")
+          error.status = 404
+          res.render("sign-up", {
+            title: "Sign Up",
+            user,
+            errors: error,
+          })
+        } else {
+        await user.save()
+        res.redirect(user.url)
+        }
       }
-    }
+    })
   })
 ]
 exports.user_login_get = asyncHandler(async(req, res, next) => {
