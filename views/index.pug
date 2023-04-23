@@ -7,10 +7,12 @@ block content
     p Welcome back #{user.fullname}
   
   else 
-    a(href='/login') Login
+    a(href='/user/login') Login
 
+  br
   hr 
+  br
 
   if user   
     div.footer-logout
-      a(href='/logout') Log Out
+      a(href='/user/logout') Log Out
