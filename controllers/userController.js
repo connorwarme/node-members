@@ -106,7 +106,7 @@ exports.user_create_post = [
   })
 ]
 exports.user_login_get = asyncHandler(async(req, res, next) => {
-  res.render("/login", { title: "Login" })
+  res.render("login", { title: "Login" })
 })
 exports.user_login_post = () => {
   passport.authenticate("local", {

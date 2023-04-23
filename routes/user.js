@@ -9,6 +9,9 @@ router.get('/', user_controller.user_list);
 router.get('/sign-up', user_controller.user_create_get)
 router.post('/sign-up', user_controller.user_create_post)
 
+router.get('/login', user_controller.user_login_get)
+router.post('/login', user_controller.user_login_post)
+
 router.get("/:id", user_controller.user_detail)
 
 module.exports = router;
