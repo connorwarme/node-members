@@ -55,8 +55,7 @@ passport.use(
           return done(null, false, { message: "Incorrect password"})
         }
       })
-    } 
-    catch(err) {
+    } catch (err) {
       return done(err)
     }
   })
@@ -69,8 +68,7 @@ passport.deserializeUser(async(id, done) => {
   try {
     const user = await User.findById(id)
     done(null, user)
-  } 
-  catch(err) {
+  } catch (err) {
     done(err)
   }
 })
@@ -79,12 +77,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }))
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/user', userRouter);
-app.get('/', (req, res) => {
-  console.log(req.user)
-  res.render("index", { user: req.user })
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
