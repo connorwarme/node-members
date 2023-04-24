@@ -60,10 +60,16 @@ exports.user_create_post = [
     .isEmail()
     .withMessage("Must be a valid email address!")
     .escape(),
-  body("password", "Password required")
+  body("password", "Password required.")
     .trim()
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters")
+    .withMessage("Password must be at least 6 characters.")
+    .escape(),
+  body("confirm_password", "Passwords did not match.")
+    .trim()
+    .custom((value, { req }) => {
+      return value === req.body.password
+    })
     .escape(),
   
   asyncHandler(async (req, res, next) => {
@@ -92,10 +98,11 @@ exports.user_create_post = [
         if (emailExists) {
           const error = new Error("Email address already associated with an account!")
           error.status = 404
+          console.log(error.message)
           res.render("sign-up", {
             title: "Sign Up",
             user,
-            errors: error,
+            error: error,
           })
         } else {
         await user.save()

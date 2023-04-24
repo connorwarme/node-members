@@ -26,5 +26,8 @@ block content
     hr
     if errors 
       ul 
-      for error in errors 
-        li #{error.msg}
+        for error in errors 
+          li!= error.msg
+    if error 
+      ul 
+        li!= error.message
