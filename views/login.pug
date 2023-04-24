@@ -3,6 +3,10 @@ extends layout
 block content 
   h1= title 
 
+  if messages 
+    each message in messages 
+      p= message 
+
   form(method='POST' action='') 
     div.form-group 
       label(for="email") Email 

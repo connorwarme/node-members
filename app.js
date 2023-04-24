@@ -7,9 +7,10 @@ const logger = require('morgan');
 const session = require("express-session")
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("./models/user")
-const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
+
+const User = require("./models/user")
+// const asyncHandler = require("express-async-handler")
 
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/user');
@@ -36,44 +37,55 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: "climb", resave: false, saveUninitialized: true }))
 
 // passport setup
-// do I need an error / catch ? 
 passport.use(
-  new LocalStrategy(asyncHandler(async(username, password, done) => {
-    const user = await User.findOne({ email: username })
-    if (!user) {
-      return done(null, false, {message: "Incorrect email"})
-    }
-    bcrypt.compare(password, user.hash, (err, res) => {
-      if (res) {
-        return done(null, user)
-      } else {
-        return done(null, false, { message: "Incorrect password"})
+  new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    },
+    async(username, password, done) => {
+    try {
+      const user = await User.findOne({ email: username })
+      if (!user) {
+        return done(null, false, {message: "Incorrect email"})
       }
-    })
-  }))
+      bcrypt.compare(password, user.hash, (err, res) => {
+        if (res) {
+          return done(null, user)
+        } else {
+          return done(null, false, { message: "Incorrect password"})
+        }
+      })
+    } 
+    catch(err) {
+      return done(err)
+    }
+  })
 )
 passport.serializeUser(function(user, done) {
   done(null, user.id)
 })
-// does this need an error/catch?
-passport.deserializeUser(asyncHandler(async(id, done) => {
-  const user = await User.findById(id)
-  done(null, user)
-}))
+
+passport.deserializeUser(async(id, done) => {
+  try {
+    const user = await User.findById(id)
+    done(null, user)
+  } 
+  catch(err) {
+    done(err)
+  }
+})
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.urlencoded({ extended: false }))
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/user', userRouter);
+app.get('/', (req, res) => {
+  console.log(req.user)
+  res.render("index", { user: req.user })
+})
 
-app.post(
-  "/user/login", 
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  })
-)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
