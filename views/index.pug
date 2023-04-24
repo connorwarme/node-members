@@ -4,14 +4,12 @@ block content
   h1= title
 
   if user 
-    p Welcome back #{user.fullname}
+    p Welcome back #{user.name} 
   
   else 
     a(href='/user/login') Login
 
-  br
   hr 
-  br
 
   if user   
     div.footer-logout
