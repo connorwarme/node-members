@@ -122,6 +122,12 @@ exports.user_login_post = passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/user/login",
   })
+exports.user_elite_get = asyncHandler(async(req, res, next) => {
+  res.render("elite", { title: "Become Elite" })
+  // figure out how to pass currentUser? 
+})
+// exports.user_elite_post = 
+// how to authenticate if user gave proper passcode to become elite member..?
 exports.user_logout_get = (req, res, next) => {
   req.logout(function (err) {
     if (err) {

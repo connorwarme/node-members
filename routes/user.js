@@ -12,6 +12,9 @@ router.post('/sign-up', user_controller.user_create_post)
 router.get('/login', user_controller.user_login_get)
 router.post('/login', user_controller.user_login_post)
 
+router.get('/become-elite', user_controller.user_elite_get)
+router.post('/become-elite', user_controller.user_elite_post)
+
 router.get('/logout', user_controller.user_logout_get)
 
 router.get("/:id", user_controller.user_detail)
