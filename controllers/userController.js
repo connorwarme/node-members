@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const passport = require("passport")
 const LocalStrategy = require("passport-local").Strategy; 
 const bcrypt = require("bcryptjs")
+require("dotenv").config()
 
 // passport setup
 // do I need an error / catch ? 
@@ -126,9 +127,40 @@ exports.user_elite_get = asyncHandler(async(req, res, next) => {
   res.render("elite", { title: "Become Elite" })
   // figure out how to pass currentUser? 
 })
-exports.user_elite_post = (req, res, next) => {
-  console.log(req.user)
-}
+exports.user_elite_post = [
+  body("password", "Password is required")
+    .trim()
+    .isLength({ min: 1 })
+    .custom((value) => {
+      return value === process.env.ELITE_ACCESS
+    })
+    .withMessage("Password invalid - access denied!")
+    .escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const user = new User({
+      first_name: res.locals.currentUser.first_name,
+      family_name: res.locals.currentUser.family_name,
+      email: res.locals.currentUser.email,
+      hash: res.locals.currentUser.hash,
+      member_status: true,
+      admin_status: false,
+      _id: res.locals.currentUser._id,
+    })
+
+    if (!errors.isEmpty()) {
+      res.render("elite", { 
+        title: "Become Elite",
+        errors: errors.array(), 
+      })
+      return;
+    } else {
+      const updateduser = await User.findByIdAndUpdate(res.locals.currentUser._id, user, {})
+      res.redirect(updateduser.url)
+    }
+  })
+]
 // how to authenticate if user gave proper passcode to become elite member..?
 exports.user_logout_get = (req, res, next) => {
   req.logout(function (err) {
