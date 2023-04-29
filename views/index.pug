@@ -12,8 +12,11 @@ block content
   hr 
 
   if user 
-    if user.member_status===false 
-      div.footer-member 
-        a(href='/user/become-elite') Become Elite  
+    div.footer-member
+    if user.member_status===false  
+      a(href='/user/become-elite') Become Elite  
+    if user.member_status===true 
+      a(href='/post/create') Create Post 
+      
     div.footer-logout
       a(href='/user/logout') Log Out
