@@ -3,11 +3,22 @@ extends layout
 block content 
   h1= title 
 
-  form(method='POST' action='')
-    div.form-group 
-      label(for='title') Title 
-      input(type='text' name='title' placeholder='Post title' required='true')
-    div.form-group 
-      label(for='post') Post 
-      input(type='textarea' name='post' placeholder='Post text' required='true')
-    button.submit-btn(type='submit') Save Post
+  if currentUser
+    form(method='POST' action='')
+      div.form-group 
+        label(for='title') Title 
+        input(type='text' name='title' placeholder='Post title' required='true')
+      div.form-group 
+        label(for='post') Post 
+        input(type='textarea' name='post' placeholder='Post text' required='true')
+      button.submit-btn(type='submit') Save
+
+    hr
+    if errors 
+      ul 
+        for error in errors 
+          li!= error.msg
+  
+  else 
+    p You must be logged in to post a message! 
+    a(href='/user/login') Login
