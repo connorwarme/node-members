@@ -21,9 +21,15 @@ const mongoose = require("mongoose")
 mongoose.set("strictQuery", false)
 const mongoDB = process.env.DB_STRING
 
-const initial = async () => await mongoose.connect(mongoDB, { useUnifiedTopology: true, useNewUrlParser: true })
+// const initial = async () => await mongoose.connect(mongoDB, { useUnifiedTopology: true, useNewUrlParser: true })
 
-initial().catch((err) => console.log(err))
+// initial().catch((err) => {
+//   console.log(err)
+//   console.log('Problem connecting to mongoDB')
+// })
+mongoose.connect(mongoDB, { useUnifiedTopology: true, useNewUrlParser: true })
+const db = mongoose.connection
+db.on("error", console.error.bind(console, "mongo connection error :/"))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -76,6 +82,11 @@ passport.deserializeUser(async(id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }))
+
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user
+  next()
+})
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

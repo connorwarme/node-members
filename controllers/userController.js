@@ -126,7 +126,9 @@ exports.user_elite_get = asyncHandler(async(req, res, next) => {
   res.render("elite", { title: "Become Elite" })
   // figure out how to pass currentUser? 
 })
-// exports.user_elite_post = 
+exports.user_elite_post = (req, res, next) => {
+  console.log(req.user)
+}
 // how to authenticate if user gave proper passcode to become elite member..?
 exports.user_logout_get = (req, res, next) => {
   req.logout(function (err) {
