@@ -1,4 +1,5 @@
 const User = require("../models/user")
+const Post = require("../models/post")
 const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator");
 const passport = require("passport") 
@@ -10,7 +11,15 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   res.send("not implemented: user list")
 })
 exports.user_detail = asyncHandler(async (req, res, next) => {
-  res.send("not implemented: post detail")
+  const [ user, posts ] = await Promise.all([
+    User.findById(req.params.id).exec(),
+    Post.find({ author: req.params.id }).exec()
+  ])
+  res.render("user_detail", {
+    title: `User: ${user.name}`,
+    user,
+    posts,
+  })
 })
 exports.user_create_get = asyncHandler(async (req, res, next) => {
   res.render("sign-up", {title: "Sign Up"})

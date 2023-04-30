@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  if user.member_status 
+    h4 *Member*
+  if user.admin_status 
+    h4 **Admin** 
+  
+  if posts 
+    h2 Posts: 
+    hr 
+    ul 
+    each post in posts 
+      li 
+        h4
+          a(href=post.url) #{post.title} 
+        p= post.text 
+      hr 
+
+
