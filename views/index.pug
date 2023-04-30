@@ -11,6 +11,27 @@ block content
 
   hr 
 
+  div.posts-container 
+    if posts===null 
+      p There are no posts in the database.
+    
+    if posts 
+      h2 Posts:
+      ul 
+        each post in posts 
+          li 
+            if user 
+              h3 
+                a(href=post.url) #{post.title}  
+              p= post.text 
+              p By: #{post.author.name}
+              p= post.date
+            else 
+              h3= post.title 
+              p= post.text 
+
+  hr 
+
   if user 
     div.footer-member
     if user.member_status===false  

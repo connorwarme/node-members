@@ -3,8 +3,12 @@ const Post = require("../models/post")
 const asyncHandler = require("express-async-handler")
 
 exports.index = asyncHandler(async (req, res, next) => {
-  console.log(req.user)
-  res.render("index", { user: req.user })
+  const posts = await Post.find().populate("author")
+
+  res.render("index", { 
+    user: req.user,
+    posts,
+  })
 })
 
 exports.post_list = asyncHandler(async (req, res, next) => {
