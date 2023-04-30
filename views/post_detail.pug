@@ -1,0 +1,11 @@
+extends layout 
+
+block content 
+  h1= post.title 
+
+  if currentUser 
+    p Author: #{post.author.name} 
+    p Date: #{post.date} 
+  
+  p= post.text
+  

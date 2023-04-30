@@ -11,7 +11,14 @@ exports.post_list = asyncHandler(async (req, res, next) => {
   res.send("not implemented: post list")
 })
 exports.post_detail = asyncHandler(async (req, res, next) => {
-  res.send("not implemented: post detail")
+  const post = await Post.findById(req.params.id).populate("author").exec()
+
+  if (post === null) {
+    const error = new Error("Post not found in database")
+    error.status = 404
+    return next(error)
+  }
+  res.render("post_detail", { post })
 })
 exports.post_create_get = asyncHandler(async (req, res, next) => {
   res.render("post_create", { title: "Create Post" })
