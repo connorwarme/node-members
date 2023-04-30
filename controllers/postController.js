@@ -32,6 +32,7 @@ exports.post_create_post = [
       title: req.body.title,
       text: req.body.post,
       author: res.locals.currentUser._id,
+      date: new Date(),
     })
 
     if (!errors.isEmpty()) {
