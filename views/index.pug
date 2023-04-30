@@ -38,6 +38,9 @@ block content
       a(href='/user/become-elite') Become Elite  
     if user.member_status===true 
       a(href='/post/create') Create Post 
+
+      if user.admin_status===false 
+        a(href='/user/become-admin') Become Admin 
       
     div.footer-logout
       a(href='/user/logout') Log Out

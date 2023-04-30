@@ -161,6 +161,44 @@ exports.user_elite_post = [
     }
   })
 ]
+exports.user_admin_get = asyncHandler(async(req, res, next) => {
+  res.render("admin", { title: "Become Admin" })
+})
+exports.user_admin_post = [
+  body("password", "Password is required")
+    .trim()
+    .isLength({ min: 1 })
+    .custom((value) => {
+      return value === process.env.ADMIN_ACCESS
+    })
+    .withMessage("Password invalid - access denied!")
+    .escape(),
+  asyncHandler(async(req, res, next) => {
+    const errors = validationResult(req)
+
+    const user = new User({
+      first_name: res.locals.currentUser.first_name,
+      family_name: res.locals.currentUser.family_name,
+      email: res.locals.currentUser.email,
+      hash: res.locals.currentUser.hash,
+      member_status: res.locals.currentUser.member_status,
+      admin_status: true,
+      _id: res.locals.currentUser._id,
+    })
+
+    if (!errors.isEmpty()) {
+      res.render("admin", { 
+        title: "Become Admin",
+        errors: errors.array(), 
+      })
+      return;
+    } else {
+      const updateduser = await User.findByIdAndUpdate(res.locals.currentUser._id, user, {})
+      res.redirect(updateduser.url)
+    }
+  })
+]
+
 // how to authenticate if user gave proper passcode to become elite member..?
 exports.user_logout_get = (req, res, next) => {
   req.logout(function (err) {

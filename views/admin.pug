@@ -1,0 +1,23 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  div.admin-status
+    if currentUser.admin_status 
+      p You are an Admin! 
+      a(href='/') Return to Home
+
+    else 
+      p Enter the password to become an Admin.
+      form(method='POST' action='')
+        div.form-group 
+          label(for='password') Password 
+          input(type='password' name='password' aria-live="polite" required="true")
+
+
+    hr
+    if errors 
+      ul 
+        for error in errors 
+          li!= error.msg
