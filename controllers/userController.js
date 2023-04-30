@@ -1,40 +1,9 @@
 const User = require("../models/user")
 const asyncHandler = require("express-async-handler")
 const { body, validationResult } = require("express-validator");
-const passport = require("passport")
-const LocalStrategy = require("passport-local").Strategy; 
+const passport = require("passport") 
 const bcrypt = require("bcryptjs")
 require("dotenv").config()
-
-// passport setup
-// do I need an error / catch ? 
-// passport.use(
-//   new LocalStrategy(asyncHandler(async(username, password, done) => {
-//     const user = await User.findOne({ email: username })
-//     if (!user) {
-//       return done(null, false, {message: "Incorrect email"})
-//     }
-//     bcrypt.compare(password, user.hash, (err, res) => {
-//       if (res) {
-//         return done(null, user)
-//       } else {
-//         return done(null, false, { message: "Incorrect password"})
-//       }
-//     })
-//   }))
-// )
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id)
-// })
-// // does this need an error/catch?
-// passport.deserializeUser(asyncHandler(async(id, done) => {
-//   const user = await User.findById(id)
-//   done(null, user)
-// }))
-// haven't dealt with bcrypt yet
-// haven't tested passport authentication
-// haven't added validation and sanitization for password and confirmation
-
 
 
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -125,7 +94,6 @@ exports.user_login_post = passport.authenticate("local", {
   })
 exports.user_elite_get = asyncHandler(async(req, res, next) => {
   res.render("elite", { title: "Become Elite" })
-  // figure out how to pass currentUser? 
 })
 exports.user_elite_post = [
   body("password", "Password is required")
@@ -199,7 +167,6 @@ exports.user_admin_post = [
   })
 ]
 
-// how to authenticate if user gave proper passcode to become elite member..?
 exports.user_logout_get = (req, res, next) => {
   req.logout(function (err) {
     if (err) {
