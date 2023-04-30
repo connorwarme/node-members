@@ -26,6 +26,8 @@ block content
               p= post.text 
               p By: #{post.author.name}
               p= post.date
+              if user.admin_status===true 
+                a(href=post.url+'/delete')
             else 
               h3= post.title 
               p= post.text 

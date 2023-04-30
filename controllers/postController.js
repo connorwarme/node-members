@@ -58,3 +58,19 @@ exports.post_create_post = [
     }
   })
 ]
+exports.post_delete_get = asyncHandler(async(req, res, next) => {
+  const post = await Post.findById(req.params.id)
+
+  if (post === null) {
+    res.redirect("/")
+  }
+
+  res.render("post_delete", {
+    title: "Delete Post",
+    post,
+  })
+})
+exports.post_delete_post = asyncHandler(async(req, res, next) => {
+  await Post.findByIdAndDelete(req.body.postid)
+  res.redirect("/")
+})

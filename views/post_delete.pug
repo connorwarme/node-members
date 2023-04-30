@@ -1,0 +1,11 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  p Are you sure you want to delete #{post.title} from the database? 
+  
+  form(method='POST' action='')
+    div.form-group
+      input#postid(type='hidden' name='postid' required='true' value=post._id )
+    button.submit-btn(type='submit') Confirm Delete 
